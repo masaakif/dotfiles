@@ -1,0 +1,21 @@
+[user]
+    name = 藤原 将朗
+    email = fujiwara@bplats.co.jp
+
+[core]
+    autoCRLF = false
+    safeCRLF = true
+    excludesfile = ~/.gitignore_global
+    preloadindex = true
+
+[alias]
+    tree = log --graph --date=short --pretty='format:%C(yellow)%h%Creset %s %Cgreen(%an)%Creset %Cred%d%Creset'
+    tagd = for-each-ref --sort=committerdate --format='%(committerdate:short) %(refname)' refs/tags
+    today = log --oneline --since='12 hour ago'
+    showpr = !"f() { git log --merges --oneline --reverse --ancestry-path $1...master | grep 'Merge pull request #' | head -n 1; }; f"
+
+    st = status
+    co = checkout
+    br = branch
+    up = rebase
+    ci = commit

@@ -1,0 +1,145 @@
+[[plugins]]
+repo = 'Shougo/dein.vim'
+
+[[plugins]]
+repo = 'Shougo/unite.vim'
+
+[[plugins]]
+repo = 'Shougo/neomru.vim'
+
+[[plugins]]
+repo = 'Shougo/neoyank.vim'
+
+[[plugins]]
+repo = 'Shougo/vimshell.vim'
+hook_add = '''
+  let s:dein_dir = expand('~/.vim/dein')
+  let g:vimproc_dll_path = s:dein_dir . '/repos/github.com/Shougo/vimproc.vim/lib/vimproc_cygwin.dll'
+'''
+
+[[plugins]]
+repo = 'Shougo/vimproc.vim'
+hook_post_update = '''
+  let cmd = 'make -f make_cygwin.mak'
+  let g:dein#plugin.build = cmd
+'''
+
+[[plugins]]
+repo = 'Shougo/vimfiler.vim'
+
+[[plugins]]
+repo = 'vim-airline/vim-airline'
+name = 'airline'
+
+[[plugins]]
+repo = 'vim-airline/vim-airline-themes'
+
+[[plugins]]
+repo = 'cespare/vim-toml'
+on_ft = 'toml'
+
+[[plugins]]
+repo = 'jonathanfilip/vim-lucius'
+
+[[plugins]]
+repo = 'sgur/vim-editorconfig'
+
+[[plugins]]
+repo = 'scrooloose/nerdtree'
+
+[[plugins]]
+repo = 'jistr/vim-nerdtree-tabs'
+
+[[plugins]]
+repo = 'Xuyuanp/nerdtree-git-plugin'
+
+[[plugins]]
+repo = 'masaakif/nerdtree-grep-plugin'
+
+[[plugins]]
+repo = 'vim-scripts/ViewOutput'
+
+[[plugins]]
+repo = 'junegunn/fzf.vim'
+
+[[plugins]]
+repo = 'airblade/vim-gitgutter'
+
+[[plugins]]
+repo = 'tpope/vim-fugitive'
+
+[[plugins]]
+repo = 'tomtom/tcomment_vim'
+
+[[plugins]]
+repo = 'bronson/vim-trailing-whitespace'
+
+#[[plugins]]
+#repo = 'christoomey/vim-tmux-navigator'
+
+#[[plugins]]
+#repo = 'supermomonga/shaberu.vim'
+
+[[plugins]]
+repo = 'ctrlpvim/ctrlp.vim'
+
+[[plugins]]
+repo = 'beanworks/vim-phpfmt'
+
+[[plugins]]
+repo = 'bogado/file-line'
+
+[[plugins]]
+repo = 'itchyny/calendar.vim'
+
+#[[plugins]]
+#repo = 'hashivim/vim-vagrant'
+
+[[plugins]]
+repo = 'altercation/vim-colors-solarized'
+hook_post_source = '''
+  augroup MyAutoCmd
+    autocmd!
+    autocmd VimEnter * nested colorscheme solarized
+  augroup END
+'''
+
+[[plugins]]
+repo = 'rking/ag.vim'
+
+[[plugins]]
+repo = 'yuratomo/w3m.vim'
+
+[[plugins]]
+repo = 'jremmen/vim-ripgrep'
+
+[[plugins]]
+repo = 'hashivim/vim-vagrant'
+
+[[plugins]]
+repo = 'lighttiger2505/gtags.vim'
+hook_add = '''
+    " Options
+    let g:Gtags_Auto_Map = 0
+    let g:Gtags_OpenQuickfixWindow = 1
+    " Keymap
+    " List functions
+    nmap <silent> ;h :Gtags -f %<CR>
+    " Reference
+    nmap <silent> ;j :GtagsCursor <CR>
+    nmap <silent> ;n :cn<CR>
+    nmap <silent> ;p :cp<CR>
+    nmap <silent> ;r :Gtags -r 
+    " Find function
+    nmap <silent> ;g :Gtags 
+'''
+
+[[plugins]]
+repo = 'jsfaint/gen_tags.vim'
+hook_add = '''
+    "let g:gen_tags#gtags_auto_gen = 1
+    let g:gen_tags#verbose = 0
+'''
+
+[[plugins]]
+repo = 'rhysd/open-pdf.vim'
