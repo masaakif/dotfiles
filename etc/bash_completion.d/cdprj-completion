@@ -1,0 +1,14 @@
+# Author: Masaaki Fujiwara <fujiwara@bplats.co.jp>
+#
+# completion for cdgit
+
+_cdprj()
+{
+    dirs=$(cd /home/fujiwara/work/projects && find . -maxdepth 2 -type d | sed -s "s/\.\///" | sed -s "s/^\.$//")
+
+    COMPREPLY=( $(compgen -W "$dirs" ${COMP_WORDS[COMP_CWORD]}) )
+}
+
+complete -F _cdprj cdprj
+
+# vim: set ft=sh sw=4 et sts=4 :
