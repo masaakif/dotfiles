@@ -1,0 +1,9 @@
+# ~/dotfiles/.mise.toml
+[tools]
+fzf = "latest"
+ripgrep = "latest"
+ghq = "latest"
+neovim = "latest"
+
+[tasks.setup]
+run = "bash scripts/setup.sh"

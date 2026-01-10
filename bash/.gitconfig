@@ -1,0 +1,14 @@
+[init]
+	defaultBranch = main
+
+; ------------------------------------------------------------
+; User-specific configuration (name, email, signing key, etc.)
+; should be placed in ~/.gitconfig.local.
+;
+; To create it, copy the template:
+;   cp ~/dotfiles/bash/.gitconfig.local.template ~/.gitconfig.local
+;
+; ~/.gitconfig.local is not tracked by git on purpose.
+; ------------------------------------------------------------
+[include]
+	path = ~/.gitconfig.local

@@ -1,0 +1,5 @@
+[user]
+	name = <your name>
+	email = <your@mail.address>
+[ghq]
+	root = </your/path/to/src> # typically /home/account/src
