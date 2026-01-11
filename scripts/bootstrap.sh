@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -e
 
-DOTFILES_REPO="git@github.com:<YOUR_GH>/dotfiles.git"
+DOTFILES_REPO="https://github.com/masaakif/dotfiles.git"
 DOTFILES_DIR="$HOME/dotfiles"
 
 echo "== dotfiles bootstrap =="
