@@ -1,12 +1,12 @@
 # ghq helpers
 
 # short ghq get (GitHub only)
-gget() {
-  ghq get "git@github.com:$1.git"
-}
+# gget() {
+#   ghq get "git@github.com:$1.git"
+# }
 
 # cd to ghq repo with fzf
-cproj() {
+gcd() {
   cd "$(ghq list -p | fzf)"
 }
 

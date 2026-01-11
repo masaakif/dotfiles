@@ -123,9 +123,3 @@ if [ -d "$HOME/.bashrc.d" ]; then
     [ -r "$f" ] && . "$f"
   done
 fi
-ghq-cd() {
-  cd 
-}
-ghq-cd() {
-  cd "$(ghq list -p | fzf)"
-}

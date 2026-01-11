@@ -1,6 +1,18 @@
+[core]
+	autocrlf = input
+	quotepath = false
 [init]
 	defaultBranch = main
-
+[url "git@github.com:"]
+	insteadOf = https://github.com
+[color]
+	ui = auto
+[apply]
+	whitespace = nowarn
+[pull]
+	ff = only
+[push]
+	default = nothing
 ; ------------------------------------------------------------
 ; User-specific configuration (name, email, signing key, etc.)
 ; should be placed in ~/.gitconfig.local.

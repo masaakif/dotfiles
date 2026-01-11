@@ -1,16 +1,65 @@
-# bash -c "$(curl -fsSL https://raw.githubusercontent.com/<YOUR_GH>/dotfiles/main/scripts/bootstrap.sh)"
+#!/usr/bin/env bash
+set -e
 
-## 1) dotfilesを持ってくる
-# git clone git@github.com:<your GH>/dotfiles.git ~/dotfiles
-# cd ~/dotfiles
+DOTFILES_REPO="git@github.com:<YOUR_GH>/dotfiles.git"
+DOTFILES_DIR="$HOME/dotfiles"
 
-## 2) miseを入れる（入れてなければ）
-# curl https://mise.run | sh
-# echo 'eval "$(~/.local/bin/mise activate bash)"' >> ~/.bashrc
-# exec bash
+echo "== dotfiles bootstrap =="
 
-## 3) ツール一括インストール（.mise.tomlに定義してある前提）
-# mise install
+# ------------------------------------------------------------
+# 1. Clone dotfiles (if not exists)
+# ------------------------------------------------------------
+if [ ! -d "$DOTFILES_DIR" ]; then
+  echo "Cloning dotfiles..."
+  git clone "$DOTFILES_REPO" "$DOTFILES_DIR"
+else
+  echo "dotfiles already exists: $DOTFILES_DIR"
+fi
 
-## 4) dotfiles反映（.mise.toml の tasks.setup がある前提）
-# mise run setup
+cd "$DOTFILES_DIR"
+
+# ------------------------------------------------------------
+# 2. Install mise (if not exists)
+# ------------------------------------------------------------
+if ! command -v mise >/dev/null 2>&1; then
+  echo "Installing mise..."
+  curl https://mise.run | sh
+else
+  echo "mise already installed"
+fi
+
+# ------------------------------------------------------------
+# 3. Activate mise (only if not already in shell)
+# ------------------------------------------------------------
+MISE_ACTIVATE_LINE='eval "$(~/.local/bin/mise activate bash)"'
+
+if ! grep -q 'mise activate bash' "$HOME/.bashrc"; then
+  echo "Enabling mise in .bashrc"
+  echo "$MISE_ACTIVATE_LINE" >> "$HOME/.bashrc"
+else
+  echo "mise already enabled in .bashrc"
+fi
+
+# NOTE:
+# Do NOT exec bash here.
+# The user should restart the shell after bootstrap.
+
+# ------------------------------------------------------------
+# 4. Install tools defined in .mise.toml
+# ------------------------------------------------------------
+echo "Installing tools via mise..."
+"$HOME/.local/bin/mise" install
+
+# ------------------------------------------------------------
+# 5. Apply dotfiles
+# ------------------------------------------------------------
+echo "Running mise setup task..."
+"$HOME/.local/bin/mise" run setup
+
+# ------------------------------------------------------------
+# 6. Post-install message
+# ------------------------------------------------------------
+echo
+echo "Bootstrap completed."
+echo "Please restart your shell:"
+echo "  exec bash"

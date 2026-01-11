@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+set -e
+
+if [ $# -ne 1 ]; then
+  echo "Usage: gget <owner/repo>"
+  exit 1
+fi
+
+ghq get "git@github.com:$1.git"
