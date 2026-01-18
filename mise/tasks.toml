@@ -1,0 +1,5 @@
+[tasks.setup]
+run = "bash scripts/setup.sh"
+
+[tasks.doctor]
+run = "bash scripts/doctor.sh"

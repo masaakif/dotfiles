@@ -45,19 +45,39 @@ fi
 # The user should restart the shell after bootstrap.
 
 # ------------------------------------------------------------
-# 4. Install tools defined in .mise.toml
+# 4. Ensure ~/.config/mise/config.toml exists
+# ------------------------------------------------------------
+if [ ! -f "$HOME/.config/mise/config.toml" ]; then
+  echo "Creating ~/.config/mise/config.toml..."
+  mkdir -p "$HOME/.config/mise"
+  touch "$HOME/.config/mise/config.toml"
+fi
+
+# ------------------------------------------------------------
+# 5. Create ~/.config/mise/config.toml from mise/tools.common.toml and mise/tasks.toml
+# ------------------------------------------------------------
+echo "Creating ~/.config/mise/config.toml..."
+{
+  echo "[tools]"
+  cat mise/tools.common.toml | grep -v '^\['
+  echo
+  cat mise/tasks.toml
+} > "$HOME/.config/mise/config.toml"
+
+# ------------------------------------------------------------
+# 6. Install tools defined in ~/.config/mise/config.toml
 # ------------------------------------------------------------
 echo "Installing tools via mise..."
 "$HOME/.local/bin/mise" install
 
 # ------------------------------------------------------------
-# 5. Apply dotfiles
+# 7. Apply dotfiles
 # ------------------------------------------------------------
 echo "Running mise setup task..."
 "$HOME/.local/bin/mise" run setup
 
 # ------------------------------------------------------------
-# 6. Post-install message
+# 8. Post-install message
 # ------------------------------------------------------------
 echo
 echo "Bootstrap completed."

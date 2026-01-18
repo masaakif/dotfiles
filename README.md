@@ -14,7 +14,7 @@ This repository is designed to:
 Run the following command on a fresh machine:
 
 ```bash
-bash -c "$(curl -fsSL https://raw.githubusercontent.com/<YOUR_GH>/dotfiles/main/scripts/bootstrap.sh)"
+bash -c "$(curl -fsSL https://raw.githubusercontent.com/masaakif/dotfiles/main/scripts/bootstrap.sh)"
 ```
 
 Then restart your shell:

@@ -1,0 +1,8 @@
+[tools]
+"cargo:tre-command" = "latest"
+eza = "latest"
+fzf = "latest"
+ghq = "latest"
+gh = "latest"
+ripgrep = "latest"
+neovim = "latest"
