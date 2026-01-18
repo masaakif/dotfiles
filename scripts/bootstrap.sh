@@ -48,6 +48,7 @@ fi
 # 4. Ensure ~/.config/mise/config.toml exists
 # ------------------------------------------------------------
 if [ ! -f "$HOME/.config/mise/config.toml" ]; then
+  mkdir -p "$HOME/.config/mise"
   echo "Creating ~/.config/mise/config.toml..."
   {
     echo "[tools]"
