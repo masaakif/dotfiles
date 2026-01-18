@@ -1,5 +1,4 @@
 [tools]
 node = "latest"
-rust = "stable"
 go = "latest"
 python = "latest"

@@ -49,26 +49,32 @@ fi
 # ------------------------------------------------------------
 if [ ! -f "$HOME/.config/mise/config.toml" ]; then
   echo "Creating ~/.config/mise/config.toml..."
-  mkdir -p "$HOME/.config/mise"
-  touch "$HOME/.config/mise/config.toml"
+  {
+    echo "[tools]"
+    cat mise/tools.common.toml | grep -v '^\['
+    echo
+    cat mise/tasks.toml
+  } > "$HOME/.config/mise/config.toml"
+else
+  echo "~/.config/mise/config.toml already exists"
 fi
 
 # ------------------------------------------------------------
-# 5. Create ~/.config/mise/config.toml from mise/tools.common.toml and mise/tasks.toml
-# ------------------------------------------------------------
-echo "Creating ~/.config/mise/config.toml..."
-{
-  echo "[tools]"
-  cat mise/tools.common.toml | grep -v '^\['
-  echo
-  cat mise/tasks.toml
-} > "$HOME/.config/mise/config.toml"
-
-# ------------------------------------------------------------
-# 6. Install tools defined in ~/.config/mise/config.toml
+# 5. Install tools defined in ~/.config/mise/config.toml
 # ------------------------------------------------------------
 echo "Installing tools via mise..."
 "$HOME/.local/bin/mise" install
+
+# ------------------------------------------------------------
+# 6. Create .mise.toml from dotfiles/mise/*.toml
+# ------------------------------------------------------------
+echo "Creating .mise.toml..."
+{
+  echo "[tools]"
+  cat mise/tools.common.toml mise/tools.toml | grep -v '^\['
+  echo
+  cat mise/tasks.toml
+} > dotfiles/.mise.toml
 
 # ------------------------------------------------------------
 # 7. Apply dotfiles

@@ -1,4 +1,5 @@
 [tools]
+rust = "stable"
 "cargo:tre-command" = "latest"
 eza = "latest"
 fzf = "latest"
