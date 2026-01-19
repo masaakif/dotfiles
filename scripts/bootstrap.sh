@@ -46,13 +46,14 @@ fi
 
 # ------------------------------------------------------------
 # 4. Ensure ~/.config/mise/config.toml exists
+#    If not, create it by combining common and user-specific tool configs
 # ------------------------------------------------------------
 mkdir -p "$HOME/.config/mise/"
 if [ ! -f "$HOME/.config/mise/config.toml" ]; then
   echo "Creating ~/.config/mise/config.toml..."
   {
     echo "[tools]"
-    cat mise/tools.common.toml | grep -v '^\['
+    cat mise/tools.common.toml mise/tools.toml | grep -v '^\['
     echo
     cat mise/tasks.toml
   } > "$HOME/.config/mise/config.toml"
@@ -67,23 +68,19 @@ echo "Installing tools via mise..."
 "$HOME/.local/bin/mise" install
 
 # ------------------------------------------------------------
-# 6. Create .mise.toml from dotfiles/mise/*.toml
+# 6. Create $DOTFILES_DIR/.mise.toml
 # ------------------------------------------------------------
 echo "Creating .mise.toml..."
 {
-  echo "[tools]"
-  cat mise/tools.common.toml mise/tools.toml | grep -v '^\['
-  echo
-  cat mise/tasks.toml
-} > dotfiles/.mise.toml
+  cat "$HOME/.config/mise/config.toml"
+} > "$DOTFILES_DIR/.mise.toml"
 
 # ------------------------------------------------------------
 # 7. Apply dotfiles
 # ------------------------------------------------------------
+"$HOME/.local/bin/mise" trust "$DOTFILES_DIR/.mise.toml"
 echo "Running mise setup task..."
-pushd "$HOME/dotfiles"
 "$HOME/.local/bin/mise" run setup
-popd
 
 # ------------------------------------------------------------
 # 8. Post-install message
