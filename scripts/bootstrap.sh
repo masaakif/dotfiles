@@ -47,8 +47,8 @@ fi
 # ------------------------------------------------------------
 # 4. Ensure ~/.config/mise/config.toml exists
 # ------------------------------------------------------------
+mkdir -p "$HOME/.config/mise/"
 if [ ! -f "$HOME/.config/mise/config.toml" ]; then
-  mkdir -p "$HOME/.config/mise"
   echo "Creating ~/.config/mise/config.toml..."
   {
     echo "[tools]"
@@ -81,7 +81,9 @@ echo "Creating .mise.toml..."
 # 7. Apply dotfiles
 # ------------------------------------------------------------
 echo "Running mise setup task..."
+pushd "$HOME/dotfiles"
 "$HOME/.local/bin/mise" run setup
+popd
 
 # ------------------------------------------------------------
 # 8. Post-install message
