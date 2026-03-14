@@ -386,7 +386,6 @@ require("lazy").setup({
       require('toggleterm').setup()
       m = {
         { '<Leader>so', string.format(":ToggleTerm<CR>") }, --km
-        { '<Leader>so', string.format(":ToggleTerm<CR>") }, --km
         { '<Leader>st', string.format(":ToggleTerm direction=tab<CR>") }, --km
         { '<Leader>sf', string.format(":ToggleTerm direction=float<CR>") }, --km
         { 't', '<C-[>', [[<C-\><C-n>]] }, -- km
