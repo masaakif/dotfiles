@@ -53,9 +53,9 @@ if [ ! -f "$HOME/.config/mise/config.toml" ]; then
   echo "Creating ~/.config/mise/config.toml..."
   {
     echo "[tools]"
-    cat mise/tools.common.toml mise/tools.toml | grep -v '^\['
+    cat config/mise/tools.common.toml config/mise/tools.toml 2>/dev/null | grep -v '^\[' || true
     echo
-    cat mise/tasks.toml
+    cat config/mise/tasks.toml 2>/dev/null || true
   } > "$HOME/.config/mise/config.toml"
 else
   echo "~/.config/mise/config.toml already exists"

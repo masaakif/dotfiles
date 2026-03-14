@@ -1,0 +1,8 @@
+- [ ] cargo-cacheのインストール
+- [ ] 
+- [x] 必要なアプリがはいってるか確認
+- [x] Neovimをデフォルトにする
+- [x] neovimのinit.luaなどが含まれる、github.com/tontoroRR/myenvs/nvim/配下を適切なところに置く
+- [ ] libreadline-devをインストールするのを自動化する
+- [x] lua5.1を入れる
+- [x] miseのフォルダをconfigに移動。bootstrap.shも修正

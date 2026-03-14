@@ -1,9 +1,12 @@
 [tools]
 rust = "stable"
 "cargo:tre-command" = "latest"
+"cargo:cargo-cache" = "latest"
 eza = "latest"
 fzf = "latest"
 ghq = "latest"
 gh = "latest"
 ripgrep = "latest"
 neovim = "latest"
+zoxide = "latest"
+lua = "5.1"

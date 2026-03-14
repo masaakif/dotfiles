@@ -26,6 +26,10 @@ else
   echo "Exists:  ~/.gitconfig.local (kept as-is)"
 fi
 
+# nvim
+mkdir -p "$HOME/.config"
+ln -sfn "$DOTFILES_DIR/config/nvim" "$HOME/.config/nvim"
+
 # dotfiles/bin (experimental)
 if [ -d "$HOME/dotfiles/bin" ]; then
   chmod +x "$HOME/dotfiles/bin/"* 2>/dev/null || true

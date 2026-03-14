@@ -115,6 +115,8 @@ if ! shopt -oq posix; then
     . /etc/bash_completion
   fi
 fi
+
+# mise
 eval "$(~/.local/bin/mise activate bash)"
 
 # Load modular bash configs
@@ -123,3 +125,63 @@ if [ -d "$HOME/.bashrc.d" ]; then
     [ -r "$f" ] && . "$f"
   done
 fi
+
+# .bashrc.dに移す予定の設定たち
+# zoxide
+eval "$(zoxide init bash)"
+
+# 前回セッション時のディレクトリを復帰
+LAST_DIR_FILE="$HOME/.last_dir"
+get_last_dir() {
+    if [ -f "$LAST_DIR_FILE" ]; then
+        cat "$LAST_DIR_FILE"
+    else
+	echo "$HOME"
+    fi
+}
+save_last_dir() {
+    PREV_DIR="$(get_last_dir)"
+    CURRENT_DIR="$(pwd)"
+    if [ "$CURRENT_DIR" != "$PREV_DIR" ]; then
+       echo "$CURRENT_DIR" > "$LAST_DIR_FILE"
+    fi
+}
+export PROMPT_COMMAND="save_last_dir; $PROMPT_COMMAND"
+
+PREV_DIR="$(get_last_dir)"
+cd "$PREV_DIR"
+
+# --- History Settings ---
+export HISTTIMEFORMAT='%F %T '
+export HISTSIZE=50000
+export HISTFILESIZE=50000
+export HISTCONTROL=ignoreboth
+export HISTIGNORE="history"
+shopt -s histappend
+PROMPT_COMMAND="history -a; $PROMPT_COMMAND"
+
+# neovimをデフォルトに
+export EDITOR=nvim
+export VISUAL=nvim
+
+# aptをsudoなし、パスワードなしで実行できるようにする
+alias apt='sudo apt'
+alias apt-get='sudo apt-get'
+alias add-apt-repository='sudo add-apt-repository'
+
+# 日本語入力(Fcitx5)の設定
+export GTK_IM_MODULE=fcitx
+export QT_IM_MODULE=fcitx
+export XMODIFIERS=@im=fcitx
+export DefaultIMModule=fcitx
+pgrep -x "fcitx5" > /dev/null || XDG_SESSION_TYPE=x11 fcitx5 -d > /dev/null 2>&1
+
+# --- Auto Logging (script) ---
+if [ -z "$SCRIPT_LOGGED" ]; then
+    echo "auto logging starting..."
+    mkdir -p ~/terminal-logs
+    LOG_FILE=~/terminal-logs/log_$(date +%Y%m%d_%H%M%S).txt
+    export SCRIPT_LOGGED=1
+    exec script -q -a "$LOG_FILE"
+fi
+

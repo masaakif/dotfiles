@@ -86,6 +86,31 @@ This checks:
 * dotfiles symlinks
 * git local config presence
 
+# Installed Tools & Languages
+
+Managed by **mise**. All tools are kept up to date (`latest` or `stable`).
+
+### Languages
+| Tool | Version | Config Path |
+| :--- | :--- | :--- |
+| **Rust** | `stable` | `mise/tools.common.toml` |
+| **Node.js** | `latest` | `mise/tools.toml` |
+| **Go** | `latest` | `mise/tools.toml` |
+| **Python** | `latest` | `mise/tools.toml` |
+
+### CLI Tools
+| Tool | Version | Config Path |
+| :--- | :--- | :--- |
+| **Neovim** | `latest` | `mise/tools.common.toml` |
+| **gh** | `latest` | `mise/tools.common.toml` |
+| **ghq** | `latest` | `mise/tools.common.toml` |
+| **eza** | `latest` | `mise/tools.common.toml` |
+| **ripgrep** | `latest` | `mise/tools.common.toml` |
+| **fzf** | `latest` | `mise/tools.common.toml` |
+| **zoxide** | `latest` | `mise/tools.common.toml` |
+| **tre-command** | `latest` | `mise/tools.common.toml` |
+| **cargo-cache** | `latest` | `mise/tools.common.toml` |
+
 # Notes
 
 * Secrets, tokens, SSH keys, and GPG keys are never committed
