@@ -75,9 +75,10 @@ esac
 # enable color support of ls and also add handy aliases
 if [ -x /usr/bin/dircolors ]; then
     test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
+
     alias ls='ls --color=auto'
-    #alias dir='dir --color=auto'
-    #alias vdir='vdir --color=auto'
+    # alias dir='dir --color=auto'
+    # alias vdir='vdir --color=auto'
 
     alias grep='grep --color=auto'
     alias fgrep='fgrep --color=auto'
@@ -88,9 +89,9 @@ fi
 #export GCC_COLORS='error=01;31:warning=01;35:note=01;36:caret=01;32:locus=01:quote=01'
 
 # some more ls aliases
-alias ll='ls -alF'
-alias la='ls -A'
-alias l='ls -CF'
+# alias ll='ls -alF'
+# alias la='ls -A'
+# alias l='ls -CF'
 
 # Add an "alert" alias for long running commands.  Use like so:
 #   sleep 10; alert
@@ -109,15 +110,14 @@ fi
 # this, if it's already enabled in /etc/bash.bashrc and /etc/profile
 # sources /etc/bash.bashrc).
 if ! shopt -oq posix; then
-  if [ -f /usr/share/bash-completion/bash_completion ]; then
+  if [ -f "$HOME/.local/share/bash-completion/completions/bash_completion" ]; then
+    . "$HOME/.local/share/bash-completion/completions/bash_completion"
+  elif [ -f /usr/share/bash-completion/completions/bash_completion ]; then
     . /usr/share/bash-completion/bash_completion
   elif [ -f /etc/bash_completion ]; then
     . /etc/bash_completion
   fi
 fi
-
-# mise
-eval "$(~/.local/bin/mise activate bash)"
 
 # Load modular bash configs
 if [ -d "$HOME/.bashrc.d" ]; then
@@ -125,63 +125,3 @@ if [ -d "$HOME/.bashrc.d" ]; then
     [ -r "$f" ] && . "$f"
   done
 fi
-
-# .bashrc.dに移す予定の設定たち
-# zoxide
-eval "$(zoxide init bash)"
-
-# 前回セッション時のディレクトリを復帰
-LAST_DIR_FILE="$HOME/.last_dir"
-get_last_dir() {
-    if [ -f "$LAST_DIR_FILE" ]; then
-        cat "$LAST_DIR_FILE"
-    else
-	echo "$HOME"
-    fi
-}
-save_last_dir() {
-    PREV_DIR="$(get_last_dir)"
-    CURRENT_DIR="$(pwd)"
-    if [ "$CURRENT_DIR" != "$PREV_DIR" ]; then
-       echo "$CURRENT_DIR" > "$LAST_DIR_FILE"
-    fi
-}
-export PROMPT_COMMAND="save_last_dir; $PROMPT_COMMAND"
-
-PREV_DIR="$(get_last_dir)"
-cd "$PREV_DIR"
-
-# --- History Settings ---
-export HISTTIMEFORMAT='%F %T '
-export HISTSIZE=50000
-export HISTFILESIZE=50000
-export HISTCONTROL=ignoreboth
-export HISTIGNORE="history"
-shopt -s histappend
-PROMPT_COMMAND="history -a; $PROMPT_COMMAND"
-
-# neovimをデフォルトに
-export EDITOR=nvim
-export VISUAL=nvim
-
-# aptをsudoなし、パスワードなしで実行できるようにする
-alias apt='sudo apt'
-alias apt-get='sudo apt-get'
-alias add-apt-repository='sudo add-apt-repository'
-
-# 日本語入力(Fcitx5)の設定
-export GTK_IM_MODULE=fcitx
-export QT_IM_MODULE=fcitx
-export XMODIFIERS=@im=fcitx
-export DefaultIMModule=fcitx
-pgrep -x "fcitx5" > /dev/null || XDG_SESSION_TYPE=x11 fcitx5 -d > /dev/null 2>&1
-
-# --- Auto Logging (script) ---
-if [ -z "$SCRIPT_LOGGED" ]; then
-    echo "auto logging starting..."
-    mkdir -p ~/terminal-logs
-    LOG_FILE=~/terminal-logs/log_$(date +%Y%m%d_%H%M%S).txt
-    export SCRIPT_LOGGED=1
-    exec script -q -a "$LOG_FILE"
-fi
-

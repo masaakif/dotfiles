@@ -14,6 +14,13 @@ if [ -L "$HOME/.bashrc.d" ] || [ -d "$HOME/.bashrc.d" ]; then
 fi
 ln -sf "$DOTFILES_DIR/bash/bashrc.d" "$HOME/.bashrc.d"
 
+# .local/share/bash-completion/completions が存在している場合は置き換える
+if [ -L "$HOME/.local/share/bash-completion/completions" ] || [ -d "$HOME/.local/share/bash-completion/completions" ]; then
+  rm -rf "$HOME/.local/share/bash-completion/completions"
+fi
+mkdir -p "$HOME/.local/share/bash-completion/"
+ln -sf "$DOTFILES_DIR/bash/local/share/bash-completion/completions" "$HOME/.local/share/bash-completion/completions"
+
 # git (public config)
 ln -sf "$DOTFILES_DIR/git/gitconfig" "$HOME/.gitconfig"
 

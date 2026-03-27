@@ -52,6 +52,8 @@ check_cmd git
 check_cmd bash
 check_cmd curl
 check_cmd mise
+check_cmd lsd
+check_cmd cargo-cache
 
 echo
 echo "-- mise tools --"
@@ -84,6 +86,14 @@ else
   echo "NOTE: create it from:"
   echo "  $DOTFILES_DIR/git/.gitconfig.local.template"
   echo "  cp $DOTFILES_DIR/git/.gitconfig.local.template ~/.gitconfig.local"
+fi
+
+# [TODO]: check $BASH_COMPLETION_VERSINFO ==
+source $HOME/.bashrc
+if [ "$BASH_COMPLETION_VERSINFO" != "2" ]; then
+  warn "bash-completion version is not 2"
+else
+  ok "bash-completion version is 2"
 fi
 
 echo

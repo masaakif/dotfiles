@@ -1,6 +1,12 @@
 #!/usr/bin/env bash
 set -e
 
+export MISE_YES=1
+export MISE_QUIET=true
+export CARGO_TERM_QUIET=true
+
+echo "== github token = ${GITHUB_TOKEN} =="
+
 DOTFILES_REPO="https://github.com/masaakif/dotfiles.git"
 DOTFILES_DIR="$HOME/dotfiles"
 
@@ -74,6 +80,16 @@ echo "Creating .mise.toml..."
 {
   cat "$HOME/.config/mise/config.toml"
 } > "$DOTFILES_DIR/.mise.toml"
+
+# ------------------------------------------------------------
+# 6.5. Download bash-completion and 
+# ------------------------------------------------------------
+echo "Downloading bash-completion..."
+{
+  # GitHubから最新の（_comp_initializeが入っている）本体を落とす
+  curl -L https://raw.githubusercontent.com/scop/bash-completion/master/bash_completion \
+    -o "$DOTFILES_DIR/bash/local/share/bash-completion/completions/bash_completion"
+}
 
 # ------------------------------------------------------------
 # 7. Apply dotfiles

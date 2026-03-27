@@ -1,3 +1,7 @@
-.gitconfig.local
-.mise.toml*
+mise.toml
 .codex/
+.mise/
+bash/local/share/bash-completion/completions/*
+!bash/local/share/bash-completion/completions/.gitkeep
+config/nvim/*
+!config/nvim/init.lua

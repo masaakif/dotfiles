@@ -1,0 +1,49 @@
+#!/usr/bin/env bash
+
+# Exit on error
+set -e
+
+# Change to repository root
+cd "$(dirname "$0")/.." || exit 1
+
+echo "=========================================================="
+echo " Starting fresh Ubuntu container for dotfiles testing..."
+echo "=========================================================="
+echo " - A new user 'tester' will be created."
+echo " - Your current dotfiles will be copied to ~/dotfiles."
+echo " - bootstrap.sh will be executed automatically."
+echo " - When you exit the shell, the container will be destroyed."
+echo "=========================================================="
+echo ""
+echo "== github token = ${GITHUB_TOKEN} =="
+
+# Run docker container interactively, removing it automatically when done
+# We mount the current directory readonly, copy it to the user's home,
+# and run bootstrap.
+docker run --rm --init -it \
+  -v "$PWD:/test/dotfiles:ro" \
+  debian:bookworm-slim \
+  bash -c "
+    echo '[1/5] Installing minimal prerequisites...'
+    apt-get update -qq && apt-get install -qq -y --no-install-recommends \
+	    procps sudo curl git tzdata xz-utils unzip \
+	    libreadline-dev ca-certificates build-essential >/dev/null 2>&1
+    rm -rf /var/lib/apt/lists/*
+
+    echo '[2/5] Setting up test user...'
+    useradd -m -s /bin/bash tester
+    echo 'tester ALL=(ALL) NOPASSWD:ALL' > /etc/sudoers.d/tester
+
+    echo '[3/5] Copying dotfiles to test environment...'
+    cp -r /test/dotfiles /home/tester/dotfiles
+    chown -R tester:tester /home/tester
+
+    echo '[4/5] Running bootstrap.sh as tester...'
+    su - tester -c 'cd ~/dotfiles && GITHUB_TOKEN=${GITHUB_TOKEN} bash scripts/bootstrap.sh'
+   
+    echo '[5/5] Running doctor.sh to verify setup...'
+    su - tester -c 'cd ~/dotfiles && mise run doctor'
+
+    echo -e '\n\n✅ Setup complete! Entering shell as tester... (Type exit to destroy this container)'
+    su - tester
+  "

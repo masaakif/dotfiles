@@ -13,4 +13,3 @@ if [ -d "$DOTFILES_BIN" ]; then
     *) export PATH="$DOTFILES_BIN:$PATH" ;;
   esac
 fi
-
