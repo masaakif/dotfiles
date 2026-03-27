@@ -32,8 +32,8 @@ docker run --rm --init -it \
     useradd -m -s /bin/bash tester
     echo 'tester ALL=(ALL) NOPASSWD:ALL' > /etc/sudoers.d/tester
 
-    echo '[3/5] Cloning dotfiles from GitHub...'
-    su - tester -c 'git clone https://github.com/masaakif/dotfiles.git ~/dotfiles'
+    echo '[3/5] Cloning dotfiles from GitHub (develop branch)...'
+    su - tester -c 'git clone -b develop https://github.com/masaakif/dotfiles.git ~/dotfiles'
 
     echo '[4/5] Running bootstrap.sh as tester...'
     su - tester -c 'cd ~/dotfiles && bash scripts/bootstrap.sh'
