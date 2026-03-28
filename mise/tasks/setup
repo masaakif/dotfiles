@@ -1,0 +1,50 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+DOTFILES_DIR="${DOTFILES_DIR:-$HOME/dotfiles}"
+
+echo "Setting up dotfiles (copy mode) from: $DOTFILES_DIR"
+
+# helper to copy
+copy_item() {
+  local src="$1"
+  local dst="$2"
+  if [ -e "$dst" ] || [ -L "$dst" ]; then
+    rm -rf "$dst"
+  fi
+  cp -rf "$src" "$dst"
+  echo "Copied: $src -> $dst"
+}
+
+# bash
+copy_item "$DOTFILES_DIR/bash/bashrc" "$HOME/.bashrc"
+copy_item "$DOTFILES_DIR/bash/bashrc.d" "$HOME/.bashrc.d"
+
+# bash-completion
+# mkdir -p "$HOME/.local/share/bash-completion/"
+copy_item "$DOTFILES_DIR/bash/local/share/bash-completion" "$HOME/.local/share/bash-completion"
+
+# git (public config)
+copy_item "$DOTFILES_DIR/git/gitconfig" "$HOME/.gitconfig"
+
+# git (local/private config)
+if [ ! -e "$HOME/.gitconfig.local" ]; then
+  cp "$DOTFILES_DIR/git/gitconfig.local.template" "$HOME/.gitconfig.local"
+  chmod 600 "$HOME/.gitconfig.local"
+  echo "Created: ~/.gitconfig.local (from template)"
+else
+  echo "Exists:  ~/.gitconfig.local (kept as-is)"
+fi
+
+# nvim
+mkdir -p "$HOME/.config"
+copy_item "$DOTFILES_DIR/config/nvim" "$HOME/.config/nvim"
+
+# dotfiles/bin (experimental)
+if [ -d "$HOME/dotfiles/bin" ]; then
+  chmod +x "$HOME/dotfiles/bin/"* 2>/dev/null || true
+fi
+
+echo "Done."
+echo "Note: Files are now copies. Changes in $DOTFILES_DIR will not affect your home directory until setup is run again."
+echo "Restart shell: exec bash"

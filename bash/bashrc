@@ -113,10 +113,14 @@ if ! shopt -oq posix; then
   if [ -f "$HOME/.local/share/bash-completion/completions/bash_completion" ]; then
     . "$HOME/.local/share/bash-completion/completions/bash_completion"
   elif [ -f /usr/share/bash-completion/completions/bash_completion ]; then
+    echo "not loaded local bash-completion"
     . /usr/share/bash-completion/bash_completion
   elif [ -f /etc/bash_completion ]; then
+    echo "not loaded local bash-completion"
     . /etc/bash_completion
   fi
+else
+  echo "posix shell, skip completion"
 fi
 
 # Load modular bash configs
