@@ -27,8 +27,12 @@ local options = {
 }
 
 -- set lua, python
-vim.g.lua_host_prog = '/home/vagrant/.asdf/installs/lua/5.1.5/bin/lua'
-vim.g.python3_host_prog = '/home/vagrant/.asdf/shims/python3'
+local function get_prog_path(prog)
+  local path = vim.fn.exepath(prog)
+  return path ~= "" and path or nil
+end
+vim.g.lua_host_prog = get_prog_path('lua')
+vim.g.python3_host_prog = get_prog_path('python3')
 
 -- set colorscheme
 vim.cmd.colorscheme 'habamax'
@@ -98,17 +102,19 @@ map_keys(global_keymaps)
 
 -- lazy.vim
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
-if not vim.loop.fs_stat(lazypath) then
-  vim.fn.system({
-    "git",
-    "clone",
-    "--filter=blob:none",
-    "https://github.com/folke/lazy.nvim.git",
-    "--branch=stable", -- latest stable release
-    lazypath,
-  })
+if not (vim.uv or vim.loop).fs_stat(lazypath) then
+  local lazyrepo = "https://github.com/folke/lazy.nvim.git"
+  local out = vim.fn.system({ "git", "clone", "--filter=blob:none", "--branch=stable", lazyrepo, lazypath })
+  if vim.v.shell_error ~= 0 then
+    vim.api.nvim_echo({
+      { "Failed to clone lazy.nvim:\n", "ErrorMsg" },
+      { out, "WarningMsg" },
+      { "\nPress any key to exit..." },
+    }, true, {})
+    vim.fn.getchar()
+    os.exit(1)
+  end
 end
-
 vim.opt.rtp:prepend(lazypath)
 
 -- plugins
@@ -477,11 +483,21 @@ require("lazy").setup({
         fallback = 'unnamedplus',
         lazy = true,
       }
-      copy_command = 'win32yank.exe -i --crlf'
-      paste_command = 'win32yank.exe -o --lf'
-      if vim.loop.os_uname().sysname == 'Linux' then
-        copy_command = 'xsel -ib'
-        paste_command = 'xsel -ob'
+      local copy_command = ""
+      local paste_command = ""
+      if vim.fn.has("wsl") == 1 then
+        -- WSL (Windows)
+        copy_command = 'win32yank.exe -i --crlf'
+        paste_command = 'win32yank.exe -o --lf'
+      elseif vim.fn.has("unix") == 1 then
+        -- Linux / MacOS
+        if vim.fn.executable('xclip') == 1 then
+          copy_command = 'xclip -selection clipboard'
+          paste_command = 'xclip -selection clipboard -o'
+        elseif vim.fn.executable('xsel') == 1 then
+          copy_command = 'xsel -ib'
+          paste_command = 'xsel -ob'
+        end
       end
       vim.g.clipboard = {
         name = 'clip',

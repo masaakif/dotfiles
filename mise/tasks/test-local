@@ -25,10 +25,9 @@ docker run --rm --init -it \
   -v "$PWD:/test/dotfiles:ro" \
   debian:bookworm-slim \
   bash -c "
-    echo '[1/5] Installing minimal prerequisites...'
+    echo '[1/5] Installing minimal prerequisites (curl, sudo, ca-certificates)...'
     apt-get update -qq && apt-get install -qq -y --no-install-recommends \
-      procps sudo curl git tzdata xz-utils unzip \
-      libreadline-dev ca-certificates build-essential >/dev/null 2>&1
+      curl ca-certificates sudo procps >/dev/null 2>&1
     rm -rf /var/lib/apt/lists/*
 
     echo '[2/5] Setting up test user...'

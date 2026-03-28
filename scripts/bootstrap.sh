@@ -13,12 +13,28 @@ DOTFILES_DIR="$HOME/dotfiles"
 echo "== dotfiles bootstrap =="
 
 # ------------------------------------------------------------
+# 0. Install prerequisites (git, curl, etc.)
+# ------------------------------------------------------------
+DOTFILES_BRANCH="${DOTFILES_BRANCH:-main}"
+
+if [ -f "scripts/install-deps.sh" ]; then
+  echo "Found local scripts/install-deps.sh, running..."
+  bash "scripts/install-deps.sh"
+elif [ -f "$DOTFILES_DIR/scripts/install-deps.sh" ]; then
+  echo "Found $DOTFILES_DIR/scripts/install-deps.sh, running..."
+  bash "$DOTFILES_DIR/scripts/install-deps.sh"
+else
+  echo "Downloading and running install-deps.sh from GitHub..."
+  PREREQUISITES_URL="https://raw.githubusercontent.com/masaakif/dotfiles/${DOTFILES_BRANCH}/scripts/install-deps.sh"
+  curl -fsSL "$PREREQUISITES_URL" | bash
+fi
+
+# ------------------------------------------------------------
 # 1. Clone dotfiles (if not exists)
 # ------------------------------------------------------------
 if [ ! -d "$DOTFILES_DIR" ]; then
-  DOTFILES_BRANCH="${DOTFILES_BRANCH:-}"
   CLONE_ARGS=()
-  if [ -n "$DOTFILES_BRANCH" ]; then
+  if [ -n "$DOTFILES_BRANCH" ] && [ "$DOTFILES_BRANCH" != "main" ]; then
     echo "Cloning dotfiles (branch: $DOTFILES_BRANCH)..."
     CLONE_ARGS+=("-b" "$DOTFILES_BRANCH")
   else
@@ -30,10 +46,6 @@ else
 fi
 
 cd "$DOTFILES_DIR"
-
-# ------------------------------------------------------------
-# 2. Install mise (if not exists)
-# ------------------------------------------------------------
 if ! command -v mise >/dev/null 2>&1; then
   echo "Installing mise..."
   curl https://mise.run | sh
