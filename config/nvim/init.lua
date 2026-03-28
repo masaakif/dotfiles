@@ -11,6 +11,7 @@ local options = {
   smartindent = true,
   termguicolors = true,
   syntax = 'on',
+  runtimepath = vim.o.runtimepath .. "," .. vim.fn.stdpath("data") .. "/site",
 
   expandtab = true,
   tabstop = 2,
@@ -499,12 +500,7 @@ require("lazy").setup({
       }
       local copy_command = ""
       local paste_command = ""
-      if ConfigInfo.is_wsl then
-        -- WSL (Windows)
-        print("DEBUG: [Clipboard] WSL detected, using win32yank.exe")
-        copy_command = 'win32yank.exe -i --crlf'
-        paste_command = 'win32yank.exe -o --lf'
-      elseif ConfigInfo.is_linux or ConfigInfo.is_mac then
+      if ConfigInfo.is_linux or ConfigInfo.is_mac then
         -- Linux / MacOS
         if os.getenv("DISPLAY") ~= nil or os.getenv("WAYLAND_DISPLAY") ~= nil then
           if vim.fn.executable('xclip') == 1 then
@@ -519,6 +515,11 @@ require("lazy").setup({
         else
           print("DEBUG: [Clipboard] No DISPLAY found, skipping tool setup")
         end
+      elseif ConfigInfo.is_wsl or ConfigInfo.is_windows then
+          -- WSL (Windows)
+          print("DEBUG: [Clipboard] WSL detected, using win32yank.exe")
+          copy_command = 'win32yank.exe -i --crlf'
+          paste_command = 'win32yank.exe -o --lf'
       end
       if copy_command ~= "" then
         vim.g.clipboard = {
