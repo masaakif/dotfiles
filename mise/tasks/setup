@@ -30,7 +30,7 @@ echo ""
 # git
 echo "-- copy gitconfig and gitconfig.local --"
 copy_item "$DOTFILES_DIR/git/gitconfig" "$HOME/.gitconfig"
-copy_item "$DOTFILES_DIR/git/gitconfig.local" "$HOME/.gitconfig.local"
+copy_item "$DOTFILES_DIR/git/gitconfig.local.template" "$HOME/.gitconfig.local"
 chmod 600 "$HOME/.gitconfig.local"
 echo ""
 
