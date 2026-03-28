@@ -11,7 +11,6 @@ local options = {
   smartindent = true,
   termguicolors = true,
   syntax = 'on',
-  runtimepath = vim.o.runtimepath .. "," .. vim.fn.stdpath("data") .. "/site",
 
   expandtab = true,
   tabstop = 2,
@@ -237,20 +236,19 @@ require("lazy").setup({
     event = 'VeryLazy',
     build = ':TSUpdate',
     config = function()
-      -- 1. run setup for Linux
-      if vim.loop.os_uname().sysname == 'Linux' then
-        -- local configs = require('nvim-treesitter.configs')
-        local status, configs = pcall(require, 'nvim-treesitter.configs')
-        if status then
-          configs.setup({
-            ensure_installed = { 'nu', 'json', 'vim', 'lua', 'python', 'yaml', 'json', 'markdown' },
-            sync_install = false,
-            highlight = {
-              enable = true,
-            },
-            indent = { enable = true },
-          })
-        end
+      local status, configs = pcall(require, 'nvim-treesitter.configs')
+      if status then
+        configs.setup({
+          ensure_installed = { 
+            'nu', 'json', 'vim', 'lua', 'python', 'yaml', 
+            'markdown', 'bash', 'dockerfile', 'toml' 
+          },
+          sync_install = false,
+          highlight = {
+            enable = true,
+          },
+          indent = { enable = true },
+        })
       end
       -- fold
       vim.o.foldmethod = 'expr'
