@@ -17,33 +17,36 @@ copy_item() {
 }
 
 # bash
+echo "-- copy .bashrc and .bashrc.d/ --"
 copy_item "$DOTFILES_DIR/bash/bashrc" "$HOME/.bashrc"
 copy_item "$DOTFILES_DIR/bash/bashrc.d" "$HOME/.bashrc.d"
+echo ""
 
 # bash-completion
-# mkdir -p "$HOME/.local/share/bash-completion/"
+echo "-- copy bash-completion --"
 copy_item "$DOTFILES_DIR/bash/local/share/bash-completion" "$HOME/.local/share/bash-completion"
+echo ""
 
-# git (public config)
+# git
+echo "-- copy gitconfig and gitconfig.local --"
 copy_item "$DOTFILES_DIR/git/gitconfig" "$HOME/.gitconfig"
-
-# git (local/private config)
-if [ ! -e "$HOME/.gitconfig.local" ]; then
-  cp "$DOTFILES_DIR/git/gitconfig.local.template" "$HOME/.gitconfig.local"
-  chmod 600 "$HOME/.gitconfig.local"
-  echo "Created: ~/.gitconfig.local (from template)"
-else
-  echo "Exists:  ~/.gitconfig.local (kept as-is)"
-fi
+copy_item "$DOTFILES_DIR/git/gitconfig.local" "$HOME/.gitconfig.local"
+chmod 600 "$HOME/.gitconfig.local"
+echo ""
 
 # nvim
+echo "-- nvim --"
 mkdir -p "$HOME/.config"
 copy_item "$DOTFILES_DIR/config/nvim" "$HOME/.config/nvim"
+echo ""
 
-# dotfiles/bin (experimental)
+# dotfiles/bin
+echo "-- dotfiles bin --"
 if [ -d "$HOME/dotfiles/bin" ]; then
   chmod +x "$HOME/dotfiles/bin/"* 2>/dev/null || true
+  echo "Ensured executable bits in $HOME/dotfiles/bin/"
 fi
+echo ""
 
 echo "Done."
 echo "Note: Files are now copies. Changes in $DOTFILES_DIR will not affect your home directory until setup is run again."
