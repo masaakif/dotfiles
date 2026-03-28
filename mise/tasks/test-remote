@@ -34,7 +34,7 @@ docker run --rm --init -it \
     echo 'tester ALL=(ALL) NOPASSWD:ALL' > /etc/sudoers.d/tester
 
     echo '[3/5] Bootstrapping via remote script (curl | bash)...'
-    su - tester -c 'curl -fsSL https://raw.githubusercontent.com/masaakif/dotfiles/develop/scripts/bootstrap.sh | GITHUB_TOKEN=${GITHUB_TOKEN} MISE_YES=1 bash'
+    su - tester -c 'curl -fsSL https://raw.githubusercontent.com/masaakif/dotfiles/develop/scripts/bootstrap.sh | GITHUB_TOKEN=${GITHUB_TOKEN} MISE_YES=1 DOTFILES_BRANCH=develop bash'
 
     echo '[4/5] (Reserved/Cleanup)...'
     echo 'Bootstrap completed via remote script.'

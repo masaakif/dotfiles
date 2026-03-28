@@ -16,8 +16,15 @@ echo "== dotfiles bootstrap =="
 # 1. Clone dotfiles (if not exists)
 # ------------------------------------------------------------
 if [ ! -d "$DOTFILES_DIR" ]; then
-  echo "Cloning dotfiles..."
-  git clone "$DOTFILES_REPO" "$DOTFILES_DIR"
+  DOTFILES_BRANCH="${DOTFILES_BRANCH:-}"
+  CLONE_ARGS=()
+  if [ -n "$DOTFILES_BRANCH" ]; then
+    echo "Cloning dotfiles (branch: $DOTFILES_BRANCH)..."
+    CLONE_ARGS+=("-b" "$DOTFILES_BRANCH")
+  else
+    echo "Cloning dotfiles (default branch)..."
+  fi
+  git clone "${CLONE_ARGS[@]}" "$DOTFILES_REPO" "$DOTFILES_DIR"
 else
   echo "dotfiles already exists: $DOTFILES_DIR"
 fi
