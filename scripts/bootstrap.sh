@@ -103,7 +103,7 @@ echo "Downloading bash-completion..."
 # ------------------------------------------------------------
 "$HOME/.local/bin/mise" trust "$DOTFILES_DIR/.mise.toml"
 echo "Running mise setup task..."
-"$HOME/.local/bin/mise" run setup
+MISE_QUIET=false "$HOME/.local/bin/mise" run setup
 
 # ------------------------------------------------------------
 # 8. Post-install message
