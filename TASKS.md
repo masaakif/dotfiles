@@ -1,8 +1,25 @@
-- [ ] cargo-cacheのインストール
-- [ ] 
+- [x] cargo-cacheのインストール
 - [x] 必要なアプリがはいってるか確認
 - [x] Neovimをデフォルトにする
 - [x] neovimのinit.luaなどが含まれる、github.com/tontoroRR/myenvs/nvim/配下を適切なところに置く
-- [ ] libreadline-devをインストールするのを自動化する
+- [x] libreadline-devをインストールするのを自動化する
 - [x] lua5.1を入れる
 - [x] miseのフォルダをconfigに移動。bootstrap.shも修正
+- [x] miseのタスクを別のフォルダに移動する。
+- [ ] bootstrap.shとtest-dockerでやってることが重複してるような気がする。
+  - [ ] bootstrap.shでやってることを一覧にする
+  - [ ] test-dockerでやってることを一覧にする
+  - [ ] 重複してるのを整理する
+- [ ] setup.shが正しく動いていない可能性があるので確認。（ネットがつながってないだけかも）
+  - [x] bashrcがsymlinkにならない → ファイルコピーするようにした
+  - [x] .gitconfig.local missingとでる
+  - [ ] nvimの設定がコピーされない？
+  - [x] bash-completionのバージョンチェックが動かない
+- [ ] git設定のフォルダ見直し。local、config、bashのどれにするか決める。
+- [ ] test-docker-remoteで mise config files in ~/dotfiles are not trustedとなるので対応。
+  - [ ] doctor.shで出たので修正。
+  - [ ] 他でもでるか確認する。
+- [ ] gitはもしかしたらmiseで入れるとよいかも。けどどうやって？(bootstrapではgitを一時的にローカルインストールして、mise設定する。そして、git最新版をmiseでいれる。ローカルのgitは削除する、みたいな)
+- [ ] 便利な関数作成して、キーバインドする。
+  - [ ] fzf使ったやつ。
+  - [ ] ghq、ghとかのいい感じのやつ。

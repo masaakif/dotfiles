@@ -36,19 +36,26 @@ exec bash
 
 ```
 dotfiles/
-├─ .mise.toml              # Tool definitions & tasks
+├─ mise.toml                 # Tool definitions & tasks
+├─ mise.local.toml.template  # template for GITHUB_TOKEN
+├─ README.md                 # This file
+├─ TASKS.md                  # TODOs
 ├─ scripts/
-│   ├─ bootstrap.sh        # One-shot installer for new environments
-│   ├─ setup.sh            # Apply dotfiles (symlinks / stow)
-│   └─ doctor.sh           # Environment sanity check
+│   ├─ bootstrap.sh          # One-shot installer for new environments
+│   ├─ setup.sh              # Apply dotfiles (symlinks / stow)
+│   ├─ doctor.sh             # Environment sanity check
+│   ├─ test-docker.sh        # Test with docker using local dotfiles
+│   └─ test-docker-remote.sh # Test with docker using github repo
 ├─ bash/
-│   ├─ .bashrc
-│   └─ .bashrc.d/
+│   ├─ bashrc
+│   ├─ bashrc.d/
+│   └─ local/share/
+├─ config/
+│   ├─ nvim/
+│   └─ mise/
 ├─ git/
 │   ├─ .gitconfig
 │   └─ .gitconfig.local.template
-├─ vim/
-│   └─ .vimrc
 └─ bin/                    # Personal CLI tools (optional)
 ```
 

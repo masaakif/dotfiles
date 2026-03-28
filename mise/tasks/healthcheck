@@ -1,0 +1,120 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+echo "== dotfiles healthcheck =="
+
+fail=0
+
+ok()   { echo "✔ $*"; }
+warn() { echo "⚠ $*"; }
+ng()   { echo "✘ $*"; fail=1; }
+
+check_cmd() {
+  if command -v "$1" >/dev/null 2>&1; then ok "$1"; else ng "$1 (not found)"; fi
+}
+
+check_same_file() {
+  local target="$1"
+  local source="$2"
+
+  if [ -L "$target" ]; then
+    warn "$target is a symlink (expected a copy)"
+    return
+  fi
+
+  if [ ! -e "$target" ]; then
+    ng "$target (missing)"
+    return
+  fi
+
+  if [ -d "$source" ]; then
+    if [ ! -d "$target" ]; then
+      ng "$target (expected directory, found file)"
+      return
+    fi
+    # Recursive check for directory contents
+    local found_diff=0
+    for file in $(ls -A "$source"); do
+      check_same_file "$target/$file" "$source/$file"
+    done
+  else
+    if diff "$target" "$source" >/dev/null 2>&1; then
+      ok "$target (identical)"
+    else
+      warn "$target (differs from $source)"
+    fi
+  fi
+}
+
+check_executable() {
+  if [ -x "$1" ]; then
+    echo "✔ $1 (executable)"
+  elif [ -e "$1" ]; then
+    echo "⚠ $1 exists but is not executable"
+  else
+    echo "⚠ $1 (not found)"
+  fi
+}
+
+echo
+echo "-- commands --"
+REQUIRED_COMMANDS=(git bash curl mise lsd cargo-cache)
+for cmd in "${REQUIRED_COMMANDS[@]}"; do
+  check_cmd "$cmd"
+done
+
+echo
+echo "-- mise tools --"
+if command -v mise >/dev/null 2>&1; then
+  if [ -f "$HOME/dotfiles/.mise.toml" ] || [ -f "$HOME/dotfiles/mise.toml" ]; then
+    mise ls >/dev/null 2>&1 && ok "mise tools listed" || warn "mise tools not installed yet (run: cd ~/dotfiles && mise install)"
+  else
+    warn ".mise.toml not found under ~/dotfiles (is dotfiles directory different?)"
+  fi
+fi
+
+echo
+echo "-- dotfiles copies --"
+DOTFILES_DIR="${DOTFILES_DIR:-$HOME/dotfiles}"
+check_same_file "$HOME/.bashrc"   "$DOTFILES_DIR/bash/bashrc"
+check_same_file "$HOME/.bashrc.d" "$DOTFILES_DIR/bash/bashrc.d"
+check_same_file "$HOME/.gitconfig" "$DOTFILES_DIR/git/gitconfig"
+check_same_file "$HOME/.local/share/bash-completion" "$DOTFILES_DIR/bash/local/share/bash-completion"
+
+echo
+echo "-- dotfiles bin (experimental) --"
+check_executable "$HOME/dotfiles/bin/gget"
+
+echo
+echo "-- local config --"
+if [ -e "$HOME/.gitconfig.local" ]; then
+  ok "$HOME/.gitconfig.local"
+else
+  warn "$HOME/.gitconfig.local missing"
+  echo "NOTE: create it from:"
+  echo "  $DOTFILES_DIR/git/.gitconfig.local.template"
+  echo "  cp $DOTFILES_DIR/git/.gitconfig.local.template ~/.gitconfig.local"
+fi
+
+# Check bash-completion version in an interactive shell to bypass .bashrc guard
+# Using a prefix to ignore any debug output (echoes) from .bashrc
+echo
+echo "-- bash-completion version check --"
+result=$(bash -i -c 'echo "RESULT_VERSINFO:${BASH_COMPLETION_VERSINFO[0]:-$BASH_COMPLETION_VERSINFO}"' 2>/dev/null | grep '^RESULT_VERSINFO:' || true)
+actual_version=$(echo "$result" | cut -d':' -f2 | grep -o '^[0-9]' || true)
+
+if [ "$actual_version" = "2" ]; then
+  ok "bash-completion version is 2 (loaded via bashrc)"
+else
+  warn "bash-completion version 2 not detected (found: '$actual_version')"
+fi
+
+echo
+echo "-- summary --"
+if [ "$fail" -eq 0 ]; then
+  ok "Environment looks good."
+else
+  ng "Some checks failed."
+  exit 1
+fi
+

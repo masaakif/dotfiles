@@ -1,0 +1,8 @@
+[tools]
+eza = "latest"
+fzf = "latest"
+ghq = "latest"
+gh = "latest"
+lsd = "latest"
+ripgrep = "latest"
+neovim = "latest"
