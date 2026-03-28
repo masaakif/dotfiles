@@ -97,6 +97,20 @@ local global_keymaps = {
 }
 map_keys(global_keymaps)
 
+-- Centralize OS detection
+local function get_config_info()
+  local info = {}
+  local uname = vim.loop.os_uname()
+  info.is_mac = uname.sysname == 'Darwin'
+  info.is_linux = uname.sysname == 'Linux'
+  info.is_win = vim.fn.has('win32') == 1 or vim.fn.has('win64') == 1
+  -- Check if running in Docker to avoid misidentifying WSL in containers
+  info.is_docker = vim.fn.filereadable("/.dockerenv") == 1
+  info.is_wsl = vim.fn.has('wsl') == 1 and not info.is_docker
+  return info
+end
+ConfigInfo = get_config_info()
+
 -- clipboard
 -- deferred-clipboardで設定する
 
@@ -485,32 +499,41 @@ require("lazy").setup({
       }
       local copy_command = ""
       local paste_command = ""
-      if vim.fn.has("wsl") == 1 then
+      if ConfigInfo.is_wsl then
         -- WSL (Windows)
+        print("DEBUG: [Clipboard] WSL detected, using win32yank.exe")
         copy_command = 'win32yank.exe -i --crlf'
         paste_command = 'win32yank.exe -o --lf'
-      elseif vim.fn.has("unix") == 1 then
+      elseif ConfigInfo.is_linux or ConfigInfo.is_mac then
         -- Linux / MacOS
-        if vim.fn.executable('xclip') == 1 then
-          copy_command = 'xclip -selection clipboard'
-          paste_command = 'xclip -selection clipboard -o'
-        elseif vim.fn.executable('xsel') == 1 then
-          copy_command = 'xsel -ib'
-          paste_command = 'xsel -ob'
+        if os.getenv("DISPLAY") ~= nil or os.getenv("WAYLAND_DISPLAY") ~= nil then
+          if vim.fn.executable('xclip') == 1 then
+            print("DEBUG: [Clipboard] Linux detected, using xclip")
+            copy_command = 'xclip -selection clipboard'
+            paste_command = 'xclip -selection clipboard -o'
+          elseif vim.fn.executable('xsel') == 1 then
+            print("DEBUG: [Clipboard] Linux detected, using xsel")
+            copy_command = 'xsel -ib'
+            paste_command = 'xsel -ob'
+          end
+        else
+          print("DEBUG: [Clipboard] No DISPLAY found, skipping tool setup")
         end
       end
-      vim.g.clipboard = {
-        name = 'clip',
-        copy = {
-          ['+'] = copy_command,
-          ['*'] = copy_command,
-        },
-        paste = {
-          ['+'] = paste_command,
-          ['*'] = paste_command,
-        },
-        cache_enable = 0,
-      }
+      if copy_command ~= "" then
+        vim.g.clipboard = {
+          name = 'clip',
+          copy = {
+            ['+'] = copy_command,
+            ['*'] = copy_command,
+          },
+          paste = {
+            ['+'] = paste_command,
+            ['*'] = paste_command,
+          },
+          cache_enable = 0,
+        }
+      end
     end
   },
   {

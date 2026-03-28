@@ -25,19 +25,19 @@ if command -v apt-get >/dev/null 2>&1; then
   run_cmd apt-get update -qq
   run_cmd apt-get install -qq -y --no-install-recommends \
     procps sudo curl git tzdata xz-utils unzip \
-    libreadline-dev ca-certificates build-essential xclip xsel >/dev/null 2>&1
+    libreadline-dev ca-certificates build-essential xclip xsel xxd >/dev/null 2>&1
 
 elif command -v dnf >/dev/null 2>&1; then
   echo "RHEL-based system (dnf) detected."
   run_cmd dnf install -qq -y \
     procps-ng sudo curl git xz unzip \
-    readline-devel ca-certificates gcc-c++ make >/dev/null 2>&1
+    readline-devel ca-certificates gcc-c++ make xclip xsel xxd >/dev/null 2>&1
 
 elif command -v pacman >/dev/null 2>&1; then
   echo "Arch Linux-based system (pacman) detected."
   run_cmd pacman -Syu --noconfirm \
     procps-ng sudo curl git xz unzip \
-    readline ca-certificates base-devel >/dev/null 2>&1
+    readline ca-certificates base-devel xclip xsel xxd >/dev/null 2>&1
 
 elif command -v brew >/dev/null 2>&1; then
   echo "macOS (Homebrew) detected."

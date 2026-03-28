@@ -90,6 +90,9 @@ fi
 # 5. Install tools defined in ~/.config/mise/config.toml
 # ------------------------------------------------------------
 echo "Installing tools via mise..."
+echo "- First, install node via mise..."
+"$HOME/.local/bin/mise" install node
+echo "- Then, install all tools via mise..."
 "$HOME/.local/bin/mise" install
 
 # ------------------------------------------------------------

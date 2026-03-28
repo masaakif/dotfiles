@@ -58,7 +58,7 @@ check_executable() {
 
 echo
 echo "-- commands --"
-REQUIRED_COMMANDS=(git bash curl mise lsd cargo-cache)
+REQUIRED_COMMANDS=(git bash curl mise lsd cargo-cache neovim node)
 for cmd in "${REQUIRED_COMMANDS[@]}"; do
   check_cmd "$cmd"
 done
@@ -107,6 +107,28 @@ if [ "$actual_version" = "2" ]; then
   ok "bash-completion version is 2 (loaded via bashrc)"
 else
   warn "bash-completion version 2 not detected (found: '$actual_version')"
+fi
+
+echo
+echo "-- neovim --"
+if command -v nvim >/dev/null 2>&1; then
+  ok "nvim found ($(nvim --version | head -n1))"
+  
+  # Check lazy.nvim installation
+  LAZY_PATH="$HOME/.local/share/nvim/lazy/lazy.nvim"
+  if [ -d "$LAZY_PATH" ]; then
+    ok "lazy.nvim directory exists"
+    # Try to require lazy in headless mode
+    if nvim --headless +qa >/dev/null 2>&1; then
+      ok "nvim launched successfully"
+    else
+      warn "nvim failed to launch in headless mode"
+    fi
+  else
+    ng "lazy.nvim missing at $LAZY_PATH"
+  fi
+else
+  ng "nvim command not found"
 fi
 
 echo
